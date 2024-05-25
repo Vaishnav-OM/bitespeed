@@ -58,7 +58,7 @@ const getDataService = async ({ email, phoneNumber }) => {
 		const secondaryContactIds = linkedContacts
 			.filter((contact) => contact.linkPrecedence === "secondary")
 			.map((contact) => contact.id);
-
+		console.log(secondaryContactIds);
 		// Check if a new secondary contact needs to be created
 
 		const phoneNumberString = phoneNumber?.toString();
@@ -99,13 +99,15 @@ const getDataService = async ({ email, phoneNumber }) => {
 				otherPrimaryContacts.map(async (contact) => {
 					contact.linkPrecedence = "secondary";
 					contact.linkedId = oldestPrimaryContact.id;
+
 					await contact.save(); // Save the updated contact
+					secondaryContactIds.push(contact.id);
 				})
 			);
 
 			console.log("Updated primary and secondary contacts");
 		} else {
-			console.log("Error");
+			console.log("primaryContactsList.length < 0");
 		}
 		const resp = {
 			contact: {
